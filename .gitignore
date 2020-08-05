@@ -1,0 +1,32 @@
+# general
+*~
+*.log
+tmp
+dump
+
+# SBT
+dist
+project/boot
+project/target
+project/plugins/target
+target
+.target
+
+# Play
+logs
+.history
+RUNNING_PID
+
+# Intellij IDEA
+/.idea
+/.idea_modules
+
+# API Blueprint
+doc/output.html
+
+# Docker Compose
+docker/.env
+
+# sbt related dir used by CI
+/.sbt
+/.coursier

@@ -1,0 +1,30 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "myapp.proto.user";
+option java_outer_classname = "UserProto";
+
+package user;
+
+service UserService {
+    rpc getAll (GetUserListRequest) returns (GetUserListResponse) {}
+}
+
+message GetUserListRequest {
+}
+
+message GetUserListResponse {
+    repeated User users = 1;
+}
+
+message User {
+    int64 id = 1;
+    string email = 2;
+    string name = 3;
+    UserRole role = 4;
+    enum UserRole {
+        Member = 0;
+        Admin = 1;
+        Manager = 2;
+    }
+}
