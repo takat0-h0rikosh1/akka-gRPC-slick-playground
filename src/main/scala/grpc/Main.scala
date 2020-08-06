@@ -30,11 +30,7 @@ object Main extends App {
     .add(userServiceComponent.design)
     .add(grpcComponent.design)
 
-  design.withSession(s =>
-//      println(Await.result(s.build[UserResolveService].getUser, Duration.Inf))
-    s.build[GRPCServer].run()
-//      println(Await.result(s.build[UserServiceImpl].getAll(GetUserListRequest()), Duration.Inf))
-  )
+  design.newSession.build[GRPCServer].run()
 }
 
 object userServiceComponent {
