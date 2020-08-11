@@ -8,11 +8,8 @@ import wvlet.airframe.newDesign
 
 object Main extends App {
 
-  val conf = ConfigFactory
-    .parseString("akka.http.server.preview.enable-http2 = on")
-    .withFallback(ConfigFactory.defaultApplication())
+  val conf   = ConfigFactory.load()
   val system = ActorSystem("GRPCServer", conf)
-
   val dbConfig: DatabaseConfig[JdbcProfile] =
     DatabaseConfig.forConfig[JdbcProfile](path = "mydb")
 

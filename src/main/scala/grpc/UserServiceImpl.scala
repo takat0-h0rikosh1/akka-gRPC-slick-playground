@@ -18,9 +18,9 @@ trait UserServiceImpl extends UserService {
       GetUserListResponse(
         us.map(u =>
           myapp.proto.user.User(
-            1,
-            "t_horikoshi@example.com",
-            "t_horikoshi",
+            u.id,
+            u.email,
+            u.name,
             myapp.proto.user.User.UserRole.Admin
           )
         )
