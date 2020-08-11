@@ -4,9 +4,7 @@ import akka.actor.ActorSystem
 import com.typesafe.config.ConfigFactory
 import slick.basic.DatabaseConfig
 import slick.jdbc.JdbcProfile
-import wvlet.airframe.{bind, newDesign}
-
-import scala.concurrent.Future
+import wvlet.airframe.newDesign
 
 object Main extends App {
 
@@ -23,33 +21,10 @@ object Main extends App {
     .toInstance(dbConfig.profile)
     .bind[JdbcProfile#Backend#Database]
     .toInstance(dbConfig.db)
-    .bind[UserRepository]
-    .to[UserRepositoryImpl]
     .bind[ActorSystem]
     .toInstance(system)
-    .add(userServiceComponent.design)
-    .add(grpcComponent.design)
+    .add(UserServiceComponent.design)
+    .add(GRPCComponent.design)
 
   design.newSession.build[GRPCServer].run()
-}
-
-object userServiceComponent {
-  val design = newDesign
-    .bind[UserResolveService]
-    .toSingleton
-}
-
-trait UserResolveService {
-  private val repository = bind[UserRepository]
-  def getAll: Future[Seq[Tables.UsersRow]] =
-    repository.getUser
-}
-
-trait UserRepository {
-  def getUser: Future[Seq[Tables.UsersRow]]
-}
-
-class UserRepositoryImpl(val profile: JdbcProfile, val db: JdbcProfile#Backend#Database) extends UserRepository {
-  import profile.api._
-  def getUser: Future[Seq[Tables.UsersRow]] = db.run(Tables.Users.result)
 }

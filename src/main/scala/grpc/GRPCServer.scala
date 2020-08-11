@@ -6,12 +6,12 @@ import akka.http.scaladsl.Http
 import akka.http.scaladsl.model.{HttpRequest, HttpResponse}
 import akka.http.scaladsl.settings.ServerSettings
 import myapp.proto.user.{UserService, UserServiceHandler}
-import wvlet.airframe.{bind, newDesign}
+import wvlet.airframe.{bind, newDesign, DesignWithContext, Session}
 
 import scala.concurrent.{ExecutionContext, Future}
 import scala.util.{Failure, Success}
 
-object grpcComponent {
+object GRPCComponent {
   val design = newDesign
     .bind[UserServiceImpl]
     .toSingleton
@@ -33,7 +33,6 @@ trait GRPCServer {
     val reflection: PartialFunction[HttpRequest, Future[HttpResponse]] =
       ServerReflection.partial(List(UserService))
 
-    // Akka HTTP 10.1 requires adapters to accept the new actors APIs
     val bound = Http().bindAndHandleAsync(
       ServiceHandler.concatOrNotFound(service, reflection),
       interface = "127.0.0.1",
