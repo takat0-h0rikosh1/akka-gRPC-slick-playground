@@ -1,18 +1,17 @@
 package grpc
 
-import akka.actor.ActorSystem
-import myapp.proto.user.{GetUserListRequest, GetUserListResponse, UserService}
+import akka.grpc.scaladsl.Metadata
+import myapp.proto.user.{GetUserListRequest, GetUserListResponse, UserServicePowerApi}
 import wvlet.airframe.bind
 
-import scala.concurrent.{ExecutionContextExecutor, Future}
+import scala.concurrent.{ExecutionContext, Future}
 
-trait UserServiceImpl extends UserService {
+trait UserServiceImpl extends UserServicePowerApi {
 
-  private val userResolveService            = bind[UserResolveService]
-  private val system: ActorSystem           = bind[ActorSystem]
-  implicit val ec: ExecutionContextExecutor = system.dispatcher
+  private val userResolveService: UserResolveService = bind[UserResolveService]
+  implicit val ec: ExecutionContext                  = bind[ExecutionContext]
 
-  override def getAll(in: GetUserListRequest): Future[GetUserListResponse] = {
+  override def getAll(in: GetUserListRequest, metadata: Metadata): Future[GetUserListResponse] = {
 
     userResolveService.getAll.map(us =>
       GetUserListResponse(
@@ -22,6 +21,26 @@ trait UserServiceImpl extends UserService {
             u.email,
             u.name,
             myapp.proto.user.User.UserRole.Admin
+          )
+        ) ++
+        Seq(
+          myapp.proto.user.User(
+            1,
+            "user1@texample.com",
+            "user1",
+            myapp.proto.user.User.UserRole.Member
+          ),
+          myapp.proto.user.User(
+            2,
+            "user2@texample.com",
+            "user2",
+            myapp.proto.user.User.UserRole.Admin
+          ),
+          myapp.proto.user.User(
+            3,
+            "user3@texample.com",
+            "user3",
+            myapp.proto.user.User.UserRole.Manager
           )
         )
       )

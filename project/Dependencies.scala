@@ -24,28 +24,12 @@ object Dependencies {
     val akkaVersion         = "2.6.8"
     val akkaHttpCorsVersion = "0.4.2"
     val akkaHttp            = "com.typesafe.akka" %% "akka-http" % akkaHttpVersion
-    val akkaActorTyped =  "com.typesafe.akka" %% "akka-actor-typed" % akkaVersion
-    val akkaStream = "com.typesafe.akka" %% "akka-stream" % akkaVersion
-    val akkaDiscovery = "com.typesafe.akka" %% "akka-discovery" % akkaVersion
-    val akkaPki = "com.typesafe.akka" %% "akka-pki" % akkaVersion
-    val akkaProtobuf = "com.typesafe.akka" %% "akka-protobuf" % akkaVersion
-    val akkaHttpCors        = "ch.megard" %% "akka-http-cors" % akkaHttpCorsVersion
+    val akkaStream          = "com.typesafe.akka" %% "akka-stream" % akkaVersion
+    val akkaDiscovery       = "com.typesafe.akka" %% "akka-discovery" % akkaVersion
+    val akkaProtobuf        = "com.typesafe.akka" %% "akka-protobuf" % akkaVersion
   }
 
   object logback {
-    val logbackClassic = "ch.qos.logback"   % "logback-classic" % "1.2.3"
+    val logbackClassic = "ch.qos.logback" % "logback-classic" % "1.2.3"
   }
 }
-
-/*
-    val akkaHttpVersion     = "10.1.12"
-    val akkaVersion         = "2.6.8"
-    val akkaHttpCorsVersion = "0.4.2"
-    val akkaHttp            = "com.typesafe.akka" %% "akka-http" % akkaHttpVersion
-    val akkaStream          = "com.typesafe.akka" %% "akka-stream" % akkaVersion
-    val akkaDiscovery       = "com.typesafe.akka" %% "akka-discovery" % akkaVersion
-    val akkaHttpCors        = "ch.megard" %% "akka-http-cors" % akkaHttpCorsVersion
-
-
-
-*/

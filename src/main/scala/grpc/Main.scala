@@ -6,10 +6,13 @@ import slick.basic.DatabaseConfig
 import slick.jdbc.JdbcProfile
 import wvlet.airframe.newDesign
 
+import scala.concurrent.ExecutionContext
+
 object Main extends App {
 
-  val conf   = ConfigFactory.load()
-  val system = ActorSystem("GRPCServer", conf)
+  val conf                 = ConfigFactory.load()
+  val system               = ActorSystem("GRPCServer", conf)
+  val ec: ExecutionContext = system.dispatcher
   val dbConfig: DatabaseConfig[JdbcProfile] =
     DatabaseConfig.forConfig[JdbcProfile](path = "mydb")
 
@@ -20,8 +23,10 @@ object Main extends App {
     .toInstance(dbConfig.db)
     .bind[ActorSystem]
     .toInstance(system)
-    .add(UserServiceComponent.design)
+    .bind[ExecutionContext]
+    .toInstance(ec)
     .add(GRPCComponent.design)
+    .add(UserServiceComponent.design)
 
   design.newSession.build[GRPCServer].run()
 }

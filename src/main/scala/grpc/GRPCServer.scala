@@ -5,8 +5,8 @@ import akka.grpc.scaladsl.{ServerReflection, ServiceHandler}
 import akka.http.scaladsl.Http
 import akka.http.scaladsl.model.{HttpRequest, HttpResponse}
 import akka.http.scaladsl.settings.ServerSettings
-import myapp.proto.user.{UserService, UserServiceHandler}
-import wvlet.airframe.{bind, newDesign, DesignWithContext, Session}
+import myapp.proto.user.{UserService, UserServicePowerApiHandler}
+import wvlet.airframe.{bind, newDesign, Session}
 
 import scala.concurrent.{ExecutionContext, Future}
 import scala.util.{Failure, Success}
@@ -21,14 +21,15 @@ object GRPCComponent {
 
 trait GRPCServer {
 
-  private val userServiceImpl      = bind[UserServiceImpl]
-  implicit val system: ActorSystem = bind[ActorSystem]
+  private val session               = bind[Session]
+  private val userServiceImpl       = bind[UserServiceImpl]
+  implicit val system: ActorSystem  = bind[ActorSystem]
+  implicit val ec: ExecutionContext = bind[ExecutionContext]
 
   def run(): Future[Http.ServerBinding] = {
 
-    implicit def ec: ExecutionContext = system.dispatcher
     val service: PartialFunction[HttpRequest, Future[HttpResponse]] =
-      UserServiceHandler.partial(userServiceImpl)
+      UserServicePowerApiHandler.partial(userServiceImpl)
 
     val reflection: PartialFunction[HttpRequest, Future[HttpResponse]] =
       ServerReflection.partial(List(UserService))
@@ -47,6 +48,15 @@ trait GRPCServer {
         )
       case Failure(ex) =>
         system.log.error(ex, "occurred error")
+    }
+
+    sys.addShutdownHook {
+      bound
+        .flatMap(_.unbind())
+        .onComplete { _ =>
+          system.terminate()
+          session.shutdown
+        }
     }
 
     bound

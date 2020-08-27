@@ -5,10 +5,9 @@ ThisBuild / version := "0.1.0-SNAPSHOT"
 ThisBuild / organization := "com.example"
 ThisBuild / organizationName := "example"
 
-// Uncomment the following for publishing to Sonatype.
 lazy val root = (project in file("."))
   .settings(
-    name := "slick-playground",
+    name := "akka-gRPC-slick-playground",
     slickGen := {
       val dir       = baseDirectory.value
       val r         = (runner in Compile).value
@@ -31,7 +30,6 @@ lazy val root = (project in file("."))
         slick.slickCodegen,
         airframe.airframe,
         akka.akkaHttp,
-        akka.akkaActorTyped,
         akka.akkaDiscovery,
         akka.akkaStream,
         akka.akkaProtobuf,
